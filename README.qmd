@@ -1,10 +1,7 @@
 ---
 title: "Activity 4: Data visualization 2: Customizing plots"
-subtitle: Jan. 14th, 2026, Hannah Hayes & Paige Gardner
+subtitle: "Jan. 14th, 2026, Hannah Hayes & Paige Gardner"
 format: pdf
-
-execute:
-  warning: false
 ---
 
 # Overview
@@ -499,7 +496,7 @@ ggplot(data = penguins, aes(x = species, y = body_mass_g)) +
 
 # 2) Make your abalone figure ready for prime time!
 
-![Black abalone](blackabalone.jpg)
+![Black abalone]
 
 Next, it's time to practice what you've learned!
 
@@ -542,7 +539,7 @@ Use what you have learned and make a Really Nice Graph for your audience! Go wil
 
 ```{r}
 ggplot(abs, aes(x = Year, y= Abalone_Landings_lbs))+
-  geom_line(aes(color= Abalone_Species), size = 1) + 
+  geom_line(aes(color= Abalone_Species), linewidth = 1) + 
   labs(y = "Abalone Caught (lbs)",
        color="Abalone Species",
        title = "Abalone Caught 1973-1997") + 
