@@ -1,7 +1,7 @@
 ---
 title: "Activity 4: Data visualization 2: Customizing plots"
-subtitle: Jan. 14th, 2026, Calvin Munson
-format: markdown_github
+subtitle: Jan. 14th, 2026, Hannah Hayes & Paige Gardner
+format: pdf
 
 execute:
   warning: false
@@ -73,6 +73,8 @@ ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
 
 Does it look like there is a relationship between these variables? Describe the relationship.
 
+Q1.1: It looks like there are three separate clusters forming on the plot. All with a positive correlation between bill depth and length.
+
 ------------------------------------------------------------------------
 
 ### Q1.2: Color the points by species of penguin
@@ -86,6 +88,8 @@ To address the second part of our question:
 2.  Interpret the graph by describing the relationship you see and if this new visualization changes your answer to Q1.1.
 
 ```{r}
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species))
 
 ```
 
@@ -106,9 +110,12 @@ Monday's Seaside Chat provided some practice with modifying the scales of the co
 Using your new color skills, modify the `scale_color_*` code below to include a new color selection!
 
 ```{r}
+library("NatParksPalettes")
 ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(aes(color = species)) +
-  scale_color_brewer(palette = "Dark2")
+  scale_color_brewer("accent") +
+  theme_bw()
+
 ```
 
 Let's make the shape of the points vary by species to even more clearly separate the points by species:
@@ -232,6 +239,17 @@ Let's say we want our limits to include 0, so we manually specify 0 as the minim
 
 ```{r}
 ?scale_y_continuous()
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  scale_y_continuous(limits = c(0, NA)) # change the max y value to NA
+
 ```
 
 ------------------------------------------------------------------------
@@ -279,6 +297,25 @@ ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
 ### Q1.5: Change the legend title
 
 The legend title is currently not capitalized - add to the `labs()` function to change the title of the correct aesthetic(s) to make the legend title read "Species". (You may encounter an unexpected result - try and figure out what you can do to make it appear how you want! Hint: how many different aesthetics is `species` currently mapped to?).
+
+```{r}
+# Q 1.5
+?labs
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(fill = species,
+                 shape = species),
+             size = 2.5) +
+  geom_smooth(method = "lm",
+              aes(color = species)) +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_shape_manual(values = c(21, 22, 24)) +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)", 
+       fill = "Species",
+       color = "Species",
+       shape = "Species")
+```
 
 ## Themes
 
@@ -328,6 +365,12 @@ Go to the `element_text()` help page: under "Usage" you will see what arguments 
 
 What are the four options for the "face" of the text?
 
+```{r}
+# Q 1.6
+?element_text
+# the four options are "plain", "italic", "bold", "bold.italic"
+```
+
 ------------------------------------------------------------------------
 
 Modifying ALL THAT from scratch can be overwhelming! Thankfully, R has a handful of built-in, pre-curated themes that you can choose from. Add on a new line to this graph and start typing `theme_` - note how multiple options pop up! Let's click on and add `theme_classic()`.
@@ -347,9 +390,10 @@ ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
        fill = "Species",
        color = "Species",
        shape = "Species") +
+  theme_classic() +
   theme(axis.title.x = element_text(color = "red",
-                                    size = 16)) +
-  theme_classic()
+                                    size = 16)) 
+  
 
 ```
 
@@ -465,11 +509,22 @@ Please take a look at the feedback you got on the abalone figure (go back to the
 
 This could be everything from another scientist to a policymaker, a community member, your grandmother, or anyone else. Please write a short explanation of who this person or group of people is.
 
+Q2.1: We're presenting our figure to our grandma over family dinner. She has no background in science, but used to fish for abalone back in the day.
+
 ------------------------------------------------------------------------
 
 ### Q2.2: Remake your original graph from Monday.
 
 This should be as simple as copy and pasting the code you used on Monday (though remember to read in the data!). You'll need to create a new code block below here (remember how to do that?).
+
+```{r}
+abs <- read.csv("abalone_landings.csv")
+abs
+plot = ggplot(abs, aes(x = Year, y= Abalone_Landings_lbs))+
+  geom_point(aes(color= Abalone_Species))+
+  geom_line(aes(color= Abalone_Species))
+plot
+```
 
 ------------------------------------------------------------------------
 
@@ -477,15 +532,42 @@ This should be as simple as copy and pasting the code you used on Monday (though
 
 The past two activities have provided a brief sampling of the possibilities of customizing graphs using ggplot. You are welcome to explore other possibilities, too, either on your own or by talking with the teaching team.
 
+Q2.3: We would like to take the points off, change x and y axis labels, change the theme, and change the legend, to be clearer.
+
 ------------------------------------------------------------------------
 
 ### Q2.4 Make the explanatory graph!
 
 Use what you have learned and make a Really Nice Graph for your audience! Go wild with making it pretty.
 
+```{r}
+ggplot(abs, aes(x = Year, y= Abalone_Landings_lbs))+
+  geom_line(aes(color= Abalone_Species), size = 1) + 
+  labs(y = "Abalone Caught (lbs)",
+       color="Abalone Species",
+       title = "Abalone Caught 1973-1997") + 
+  theme_classic() + 
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.text = element_text(size = 12),
+    legend.title = element_text(size = 12),
+    plot.title = element_text(size=14, hjust= 0.5),
+    # Place the legend inside the plot, instead of the default outside
+    legend.position = "inside",
+    # Specify exactly where in x/y space (from 0 to 1) the legend should sit
+    legend.position.inside = c(0.8, 0.6),
+    # Color (not fill!) the legend - color refers to the outline here
+    legend.background = element_rect(color = "black"))
+
+
+
+```
+
 ### Q2.5: Explain your graph
 
 Write a couple sentences explaining the message you hope your audience will take away from seeing your graph.
+
+We hope that grandma is able to take away how popular black abalone used to be, and that something happened in the 1970s that caused their populations to crash. Maybe even ask her if she remembers what happened that year that was different from years past that we could use to help determine what happened at that point and time.
 
 # Wrap up and submit
 
